@@ -16,8 +16,8 @@
       servicenow.itsm.incident:
         state: new
         caller: "{{ username }}"
-        short_description: "{{ payload.search_name }}"
-        description: "{{ payload.result | to_nice_yaml }}"
+        short_description: "{{ payload.payload.search_name }}"
+        description: "{{ payload.payload.result | to_nice_yaml }}"
       register: new_incident
 
     - name: Setting Fact of incident number
