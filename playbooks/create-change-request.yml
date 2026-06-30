@@ -29,14 +29,6 @@
         impact: low
       register: change_request
 
-#    - debug:
-#        var: change_request
-
-#    - set_fact:
-#        incident_number_cached: "{{ new_incident.record.number }}"
-#        cacheable: true
-#
-
     - name: Get change request record number
       ansible.builtin.debug:
         msg: "A new change request has been created: {{ change_request.record.number }}"
