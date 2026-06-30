@@ -19,5 +19,6 @@
             work_notes: "{{ work_notes }}"
         register: updated_incident
 
-      - ansible.builtin.debug:
+      - name: Incident details
+        ansible.builtin.debug:
           msg: "Incident {{ incident_number }} has been updated"
