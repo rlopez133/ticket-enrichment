@@ -1,0 +1,23 @@
+  ---
+  - name: Update SNOW Incident
+    hosts: localhost
+    gather_facts: false
+    collections:
+      - servicenow.itsm
+    vars:
+      username: "{{ lookup('env', 'SN_USERNAME') }}"
+      password: "{{ lookup('env', 'SN_PASSWORD') }}"
+      instance: "{{ lookup('env', 'SN_HOST') }}"
+      incident_number:
+      work_notes:
+
+    tasks:
+      - name: Update incident with findings
+        servicenow.itsm.incident:
+          number: "{{ incident_number }}"
+          other:
+            work_notes: "{{ work_notes }}"
+        register: updated_incident
+
+      - ansible.builtin.debug:
+          msg: "Incident {{ incident_number }} has been updated"
