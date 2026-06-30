@@ -23,9 +23,11 @@
         urgency: low
       register: new_incident
 
-    - set_fact:
+    - name: Setting Fact of incident number
+      ansible.builtin.set_fact:
         incident_number_cached: "{{ new_incident.record.number }}"
         cacheable: true
 
-    - debug:
+    - name: Updating incident
+      ansible.builtin.debug:
         msg: "A new incident has been created: {{ new_incident.record.number }}"
