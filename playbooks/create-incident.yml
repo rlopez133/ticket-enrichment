@@ -28,3 +28,8 @@
     - name: Updating incident
       ansible.builtin.debug:
         msg: "A new incident has been created: {{ new_incident.record.number }}"
+
+    - name: Pass incident number to workflow
+      ansible.builtin.set_stats:
+        data:
+          incident_number: "{{ new_incident.record.number }}"
