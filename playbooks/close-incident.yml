@@ -1,26 +1,26 @@
-⏺ ---
-  - name: Close SNOW Incident
-    hosts: localhost
-    gather_facts: false
-    collections:
-      - servicenow.itsm
-    vars:
-      username: "{{ lookup('env', 'SN_USERNAME') }}"
-      password: "{{ lookup('env', 'SN_PASSWORD') }}"
-      instance: "{{ lookup('env', 'SN_HOST') }}"
-      incident_number:
-      close_code:
-      close_notes:
+---
+- name: Close SNOW Incident
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - servicenow.itsm
+  vars:
+    username: "{{ lookup('env', 'SN_USERNAME') }}"
+    password: "{{ lookup('env', 'SN_PASSWORD') }}"
+    instance: "{{ lookup('env', 'SN_HOST') }}"
+    incident_number:
+    close_code:
+    close_notes:
 
-    tasks:
-      - name: Close incident
-        servicenow.itsm.incident:
-          number: "{{ incident_number }}"
-          state: closed
-          close_code: "{{ close_code | default('solved') }}"
-          close_notes: "{{ close_notes | default('Resolved via automation') }}"
-        register: closed_incident
+  tasks:
+    - name: Close incident
+      servicenow.itsm.incident:
+        number: "{{ incident_number }}"
+        state: closed
+        close_code: "{{ close_code | default('solved') }}"
+        close_notes: "{{ close_notes | default('Resolved via automation') }}"
+      register: closed_incident
 
-      - name: Display closed incident
-        ansible.builtin.debug:
-          msg: "Incident {{ incident_number }} has been closed"
+    - name: Display closed incident
+      ansible.builtin.debug:
+        msg: "Incident {{ incident_number }} has been closed"
