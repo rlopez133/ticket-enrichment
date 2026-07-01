@@ -1,29 +1,29 @@
-  ---
-  - name: Network Introspection
-    hosts: all
-    gather_facts: false
+---
+- name: Network Introspection
+  hosts: all
+  gather_facts: false
 
-    tasks:
-      - name: Get listening ports
-        ansible.builtin.command: ss -tlnp
-        register: ports_output
+  tasks:
+    - name: Get listening ports
+      ansible.builtin.command: ss -tlnp
+      register: ports_output
 
-      - name: Get routing table
-        ansible.builtin.command: ip route
-        register: routes_output
+    - name: Get routing table
+      ansible.builtin.command: ip route
+      register: routes_output
 
-      - name: Get DNS resolution
-        ansible.builtin.command: cat /etc/resolv.conf
-        register: dns_output
+    - name: Get DNS resolution
+      ansible.builtin.command: cat /etc/resolv.conf
+      register: dns_output
 
-      - name: Get active connections
-        ansible.builtin.command: ss -s
-        register: connections_output
+    - name: Get active connections
+      ansible.builtin.command: ss -s
+      register: connections_output
 
-      - name: Display network findings
-        ansible.builtin.debug:
-          msg:
-            listening_ports: "{{ ports_output.stdout }}"
-            routes: "{{ routes_output.stdout }}"
-            dns: "{{ dns_output.stdout }}"
-            connections: "{{ connections_output.stdout }}"
+    - name: Display network findings
+      ansible.builtin.debug:
+        msg:
+          listening_ports: "{{ ports_output.stdout }}"
+          routes: "{{ routes_output.stdout }}"
+          dns: "{{ dns_output.stdout }}"
+          connections: "{{ connections_output.stdout }}"
