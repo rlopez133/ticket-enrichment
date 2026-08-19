@@ -5,12 +5,12 @@
   gather_facts: false
   become: true
   vars:
-    run_scenarios: "{{ scenario_list | default('auto_remediate,needs_approval,inform_only') }}"
+    run_scenarios: "{{ scenario_list | default('auto_remediate\nneeds_approval\ninform_only') }}"
 
   tasks:
     - name: Build scenario list
       ansible.builtin.set_fact:
-        active_scenarios: "{{ run_scenarios.split(',') | map('trim') | list }}"
+        active_scenarios: "{{ run_scenarios.split('\n') | map('trim') | select | list }}"
 
     # --- auto_remediate: fill disk with large log files ---
     - name: Fill disk with large log file to simulate capacity issue
@@ -105,7 +105,7 @@
         severity: "3-Medium"
         expected_route: "inform_only"
 
-    run_scenarios: "{{ scenario_list | default('auto_remediate,needs_approval,inform_only') }}"
+    run_scenarios: "{{ scenario_list | default('auto_remediate\nneeds_approval\ninform_only') }}"
 
     snow_urgency_map:
       "1-Critical": "1"
