@@ -73,7 +73,7 @@
   connection: local
   gather_facts: false
   vars:
-    target_host: "{{ target_host | default('app-server-01') }}"
+    target_host: "{{ target_host | default('cert-demo-vm') }}"
 
     snow_instance_url: "{{ lookup('env', 'SNOW_INSTANCE_URL') | default('https://ansible.service-now.com') }}"
     snow_username: "{{ lookup('env', 'SNOW_USERNAME') }}"
