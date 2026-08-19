@@ -4,11 +4,11 @@
   hosts: "{{ target_host | default('cert-demo-vm') }}"
   gather_facts: false
   become: true
-  vars:
+
   tasks:
     - name: Build scenario list
       ansible.builtin.set_fact:
-        active_scenarios: "{{ scenario_list if scenario_list is sequence and scenario_list is not string else scenario_list.split('\n') | map('trim') | select | list }}"
+        active_scenarios: "{{ scenario_list if scenario_list is sequence and scenario_list is not string else [scenario_list] }}"
 
     # --- auto_remediate: fill disk with large log files ---
     - name: Fill disk with large log file to simulate capacity issue
@@ -71,7 +71,7 @@
   connection: local
   gather_facts: false
   vars:
-    target_host: "{{ target_host | default('cert-demo-vm') }}"
+    sim_host: "{{ target_host | default('cert-demo-vm') }}"
 
     snow_instance_url: "{{ lookup('env', 'SNOW_INSTANCE_URL') | default('https://ansible.service-now.com') }}"
     snow_username: "{{ lookup('env', 'SNOW_USERNAME') }}"
@@ -85,20 +85,20 @@
 
     scenarios:
       auto_remediate:
-        short_description: "Disk space critical on {{ target_host }}"
-        description: "Root filesystem at 95% capacity on {{ target_host }}. Application log writes failing. Large log files consuming /var/log partition. Automated cleanup safe to execute."
+        short_description: "Disk space critical on {{ sim_host }}"
+        description: "Root filesystem at 95% capacity on {{ sim_host }}. Application log writes failing. Large log files consuming /var/log partition. Automated cleanup safe to execute."
         category: "infrastructure"
         severity: "1-Critical"
         expected_route: "auto_remediate"
       needs_approval:
-        short_description: "Application environment running slow on {{ target_host }}, high CPU utilization detected"
-        description: "Monitoring detected sustained high CPU utilization on {{ target_host }}. Application response times degraded beyond SLA thresholds. A runaway process may be consuming resources. Terminating it will free CPU but may interrupt an active workload. Human review recommended before action."
+        short_description: "Application environment running slow on {{ sim_host }}, high CPU utilization detected"
+        description: "Monitoring detected sustained high CPU utilization on {{ sim_host }}. Application response times degraded beyond SLA thresholds. A runaway process may be consuming resources. Terminating it will free CPU but may interrupt an active workload. Human review recommended before action."
         category: "infrastructure"
         severity: "2-High"
         expected_route: "needs_approval"
       inform_only:
-        short_description: "Multiple failed SSH login attempts detected on {{ target_host }}"
-        description: "Security monitoring detected 60+ failed SSH authentication attempts from multiple external IP addresses on {{ target_host }} within the last 15 minutes. Pattern consistent with brute force attack. No successful logins observed. Requires security team investigation."
+        short_description: "Multiple failed SSH login attempts detected on {{ sim_host }}"
+        description: "Security monitoring detected 60+ failed SSH authentication attempts from multiple external IP addresses on {{ sim_host }} within the last 15 minutes. Pattern consistent with brute force attack. No successful logins observed. Requires security team investigation."
         category: "security"
         severity: "3-Medium"
         expected_route: "inform_only"
@@ -112,7 +112,7 @@
   tasks:
     - name: Build scenario list
       ansible.builtin.set_fact:
-        active_scenarios: "{{ scenario_list if scenario_list is sequence and scenario_list is not string else scenario_list.split('\n') | map('trim') | select | list }}"
+        active_scenarios: "{{ scenario_list if scenario_list is sequence and scenario_list is not string else [scenario_list] }}"
 
     - name: Show scenarios to run
       ansible.builtin.debug:
@@ -136,7 +136,7 @@
           category: "{{ scenarios[item].category }}"
           urgency: "{{ snow_urgency_map[scenarios[item].severity] | default('2') }}"
           impact: "{{ snow_urgency_map[scenarios[item].severity] | default('2') }}"
-          cmdb_ci: "{{ target_host }}"
+          cmdb_ci: "{{ sim_host }}"
           state: "1"
         status_code: [200, 201]
       loop: "{{ active_scenarios }}"
