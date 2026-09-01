@@ -76,7 +76,7 @@
     snow_instance_url: "{{ lookup('env', 'SNOW_INSTANCE_URL') | default('https://ansible.service-now.com') }}"
     snow_username: "{{ lookup('env', 'SNOW_USERNAME') }}"
     snow_password: "{{ lookup('env', 'SNOW_PASSWORD') }}"
-    snow_caller_id: "{{ lookup('env', 'SNOW_CALLER_ID') | default('0163e3d5871202505d60da083cbb3538') }}"
+    snow_caller_id: "a899a1831b363110b76a0d0fdc4bcb9f"
 
     ao_base_url: "{{ lookup('env', 'AO_BASE_URL') | default('http://54.159.25.87:8080') }}"
     ao_sa_client_id: "{{ lookup('env', 'AO_CLIENT_ID') }}"
